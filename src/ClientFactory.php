@@ -12,7 +12,7 @@ use UniOne\Client\Configuration;
 final class ClientFactory
 {
     /** The bundle and its version in the "platform" query parameter of the requests, before the SDK one. */
-    public const PLATFORM = 'symfony.2.1.2';
+    public const PLATFORM = 'symfony.2.1.3';
 
     public static function configuration(?string $apiKey, ?string $host = null, float|int|string|null $timeout = null): Configuration
     {
