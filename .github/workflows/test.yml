@@ -1,0 +1,40 @@
+# Generated: the tests of the package on every push and pull request (and before a release). Do not edit, the next
+# release replaces it. The tests need no network: the API is faked.
+name: Tests
+
+on:
+  push:
+    branches: ["**"]  # not the tags: release.yml runs the tests of a tag itself
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        v: ["8.1", "8.2", "8.3", "8.4"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for the SDK unione-repo/unione-php-sdk 2.3.0 in Packagist
+        timeout-minutes: 95
+        run: |
+          for i in $(seq 1 180); do
+            if curl -fsSL -A "release-workflow (github.com/$GITHUB_REPOSITORY)" -o /tmp/sdk "https://repo.packagist.org/p2/unione-repo/unione-php-sdk.json" && grep -qF '"version":"2.3.0"' /tmp/sdk; then
+              echo "unione-repo/unione-php-sdk 2.3.0 is in Packagist"; exit 0
+            fi
+            echo "unione-repo/unione-php-sdk 2.3.0 is not in Packagist yet ($i/180)"; sleep 30
+          done
+          echo "::error::unione-repo/unione-php-sdk 2.3.0 did not appear in Packagist in 90 min: publish the SDK first"; exit 1
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.v }}
+          tools: composer
+          coverage: none
+      - run: |
+          composer install --no-interaction --no-progress && vendor/bin/phpunit

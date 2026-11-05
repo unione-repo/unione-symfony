@@ -25,6 +25,8 @@ export UNIONE_API_KEY="your-api-key"
 Settings are read from the environment by default:
 
 ```yaml
+# Symfony Flex creates these with the recipe once it is in symfony/recipes-contrib and the project allows contrib
+# recipes (composer config extra.symfony.allow-contrib true); otherwise create them by hand:
 # config/bundles.php: UniOne\Wrapper\UniOneBundle::class => ['all' => true]
 
 # .env
@@ -62,6 +64,7 @@ unione_webhook:
 Messages of the Symfony Mailer go through [email/send](https://docs.unione.io/en/web-api-ref#email-send): from, to/cc/bcc, reply-to, subject, HTML and text parts, attachments, inline images and `X-*` headers.
 
 ```php
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Header\MetadataHeader;
 use Symfony\Component\Mailer\Header\TagHeader;
 use Symfony\Component\Mime\Email;
@@ -73,7 +76,11 @@ $email = (new Email())
     ->html('<p>Your order is on its way</p>');
 $email->getHeaders()->add(new TagHeader('orders'))->add(new MetadataHeader('order_id', '42'));
 
-$mailer->send($email);
+try {
+    $mailer->send($email);
+} catch (TransportExceptionInterface $e) {
+    $error = $e->getPrevious();  // the ApiException of the SDK: getKind(), isRetryable(), getHint()
+}
 ```
 
 No verified domain yet? Send from the [test sandbox domain](#no-domain-yet-the-test-sandbox-domain).
@@ -158,6 +165,10 @@ final class EmailController extends AbstractController
     }
 }
 ```
+
+### Errors
+
+A failed send throws the `TransportException` of Symfony Mailer (`UnrecoverableTransportException` when a repeat can not succeed and symfony/messenger is installed, so the messenger does not retry it); its `getPrevious()` is the SDK `ApiException`: `getKind()`, `isRetryable()`, `getHint()`, `getApiMessage()`. The API client throws the `ApiException` itself.
 
 ## No domain yet: the test sandbox domain
 

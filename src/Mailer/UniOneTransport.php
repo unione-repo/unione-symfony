@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Messenger\Exception\UnrecoverableExceptionInterface;
 use Symfony\Component\Mime\MessageConverter;
 
 /**
@@ -33,7 +34,14 @@ final class UniOneTransport extends AbstractTransport
         try {
             $response = $this->client->call('/email/send.json', ['message' => EmailPayload::fromEmail($email, $message->getEnvelope())]);
         } catch (ApiException $e) {
-            throw new TransportException(\sprintf('Unable to send the email: %s (code %s).', $e->getMessage(), $e->getErrorCode() ?? '-'), 0, $e);
+            // the message of the SDK has the method, the API error code and how to fix it; the SDK exception is the
+            // previous one (getKind(), isRetryable(), getHint()). An error a repeat can not fix stops the retries of
+            // symfony/messenger (when it is installed): a repeat of a rejected email is rejected again.
+            $text = 'Unable to send the email: ' . $e->getMessage();
+            if (!$e->isRetryable() && \interface_exists(UnrecoverableExceptionInterface::class)) {
+                throw new UnrecoverableTransportException($text, 0, $e);
+            }
+            throw new TransportException($text, 0, $e);
         }
         if (isset($response['job_id']) && \is_string($response['job_id'])) {
             $message->setMessageId($response['job_id']);

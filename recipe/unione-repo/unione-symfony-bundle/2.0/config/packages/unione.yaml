@@ -1,0 +1,8 @@
+# UniOne API: all options, `bin/console config:dump-reference unione`
+unione:
+    api_key: '%env(UNIONE_API_KEY)%'
+    # host: '%env(default::UNIONE_HOST)%'
+    # timeout: 30
+    # webhook:
+    #     path: '/unione/webhook'
+    #     key: '%env(default::UNIONE_WEBHOOK_KEY)%'

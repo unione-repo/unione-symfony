@@ -1,0 +1,4 @@
+# Webhook endpoint at unione.webhook.path (/unione/webhook): GET - URL check, POST - notifications
+unione_webhook:
+    resource: .
+    type: unione_webhook

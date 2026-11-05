@@ -1,0 +1,3 @@
+  * Set your <fg=green>UNIONE_API_KEY</> in <fg=green>.env.local</> (the key of the control panel, never commit it)
+  * Send mail through UniOne: <fg=green>MAILER_DSN=unione+api://default</>
+  * Webhooks: <fg=green>/unione/webhook</> (register the URL with webhook/set)

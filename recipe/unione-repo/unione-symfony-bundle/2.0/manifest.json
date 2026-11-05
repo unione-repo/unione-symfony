@@ -1,0 +1,15 @@
+{
+    "bundles": {
+        "UniOne\\Wrapper\\UniOneBundle": [
+            "all"
+        ]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    },
+    "env": {
+        "UNIONE_API_KEY": "",
+        "#1": "UNIONE_HOST=api.unione.io",
+        "#2": "MAILER_DSN=unione+api://default"
+    }
+}
