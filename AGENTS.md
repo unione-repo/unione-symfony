@@ -169,7 +169,7 @@ Register the URL of the endpoint with `webhook/set`, e.g. `https://example.com/u
   composer install
   ```
 
-- **Source label.** Every request carries the query parameter `platform=symfony.2.3.0,php-sdk.2.3.0` (this package, then the SDK it is built on).
+- **Source label.** Every request carries the query parameter `platform=symfony.2.3.1,php-sdk.2.3.0` (this package, then the SDK it is built on).
 - **Tests.** `composer install --no-interaction --no-progress && vendor/bin/phpunit` runs the tests of the package (with the test tools of Symfony, not published) offline: the API is faked, never the real API, no real key; they install the SDK version the package requires from the registry. Before a release the generator also installs the package into a test app of Symfony and checks the client, the webhook endpoint and the mailer against a mock of the API. The CI (.github/workflows/test.yml) runs the tests on every push and pull request over the supported runtimes; release.yml publishes a tag only after they pass.
-- **Release.** The version (2.3.0 in composer.json) and the tag `v2.3.0` come from the generator; README.md states the Web API version the release was generated from.
+- **Release.** The version (2.3.1 in composer.json) and the tag `v2.3.1` come from the generator; README.md states the Web API version the release was generated from.
 - **Secrets.** Never commit API keys; the examples read `UNIONE_API_KEY` from the environment.

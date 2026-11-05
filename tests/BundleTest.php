@@ -91,7 +91,7 @@ final class BundleTest extends KernelTestCase
         $this->assertSame('test-key', $config->getApiKey());
         $this->assertSame(self::BASE_URL, $config->getBaseUrl());
         $this->assertSame(ClientFactory::PLATFORM . ',' . ApiClient::PLATFORM, $config->getPlatform());
-        $this->assertSame('symfony.2.3.0', ClientFactory::PLATFORM);
+        $this->assertSame('symfony.2.3.1', ClientFactory::PLATFORM);
     }
 
     public function testSettingsFromEnvironment(): void
