@@ -1,6 +1,6 @@
 {
     "name": "unione-repo/unione-symfony-bundle",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "description": "UniOne Web API for Symfony: API client services, Symfony Mailer transport, webhooks",
     "type": "symfony-bundle",
     "license": "MIT",
@@ -15,7 +15,7 @@
     "homepage": "https://github.com/unione-repo/unione-symfony",
     "require": {
         "php": ">=8.1",
-        "unione-repo/unione-php-sdk": "2.3.0",
+        "unione-repo/unione-php-sdk": "2.3.1",
         "symfony/config": "^6.4|^7.0",
         "symfony/dependency-injection": "^6.4|^7.0",
         "symfony/event-dispatcher": "^6.4|^7.0",
